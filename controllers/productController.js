@@ -41,7 +41,6 @@ exports.getProductById = catchAsync(async(req, res) => {
     }
 });
 
-
 exports.updateProduct = (req, res) => {
     //Find Product and Update
     Product.findByIdAndUpdate(req.body._id, req.body, { new: true },
@@ -59,18 +58,20 @@ exports.updateProduct = (req, res) => {
         });
 };
 
-exports.deleteProductById = (req, res) => {
-    //Find Product and Delete
-    Product.findByIdAndDelete(req.params.id, function(err, document) {
-        if (err) {
-            res.status(404).json({
-                status: "Not Found"
-            });
-        } else {
-            res.status(200).json({
-                status: "success",
-                message: "Product deleted"
-            })
-        }
-    })
+
+exports.deleteProductById = async(req, res) => {
+    const foundProduct = await Product.findById(req.params.id);
+    console.log(foundProduct)
+    if (foundProduct) {
+        Product.findByIdAndDelete(req.params.id, function() {});
+
+        res.status(200).json({
+            status: "success",
+            message: "Product Deleted"
+        })
+    } else {
+        res.status(404).json({
+            status: "Not Found"
+        });
+    }
 }

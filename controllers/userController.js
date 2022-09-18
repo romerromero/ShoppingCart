@@ -33,3 +33,58 @@ exports.getAllUsers = catchAsync(async(req, res) => {
         },
     });
 });
+
+exports.getUserById = catchAsync(async(req, res) => {
+    const foundUser = await User.findById(req.params.id);
+    if (foundUser) {
+        res.status(200).json({
+            status: "success",
+            data: {
+                user: foundUser,
+            },
+        });
+    } else {
+        res.status(404).json({
+            status: "not found",
+        });
+    }
+});
+
+exports.updateUser = async(req, res) => {
+    //Find User and Update
+
+    req.body.password = crypto
+        .createHash("sha256")
+        .update(req.body.password)
+        .digest("hex");
+
+    User.findByIdAndUpdate(req.body._id, req.body, { new: true },
+        function(err, response) {
+            if (err) {
+                res.status(404).json({
+                    status: "Not found"
+                })
+            } else {
+                res.status(200).json({
+                    status: "success",
+                    message: "User Updated"
+                })
+            }
+        });
+};
+
+exports.deleteUserById = (req, res) => {
+    //Find User and Delete
+    User.findByIdAndDelete(req.params.id, function(err, document) {
+        if (err) {
+            res.status(404).json({
+                status: "Not Found"
+            });
+        } else {
+            res.status(200).json({
+                status: "success",
+                message: "User deleted"
+            })
+        }
+    })
+}
