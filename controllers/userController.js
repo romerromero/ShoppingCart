@@ -73,18 +73,19 @@ exports.updateUser = async(req, res) => {
         });
 };
 
-exports.deleteUserById = (req, res) => {
-    //Find User and Delete
-    User.findByIdAndDelete(req.params.id, function(err, document) {
-        if (err) {
-            res.status(404).json({
-                status: "Not Found"
-            });
-        } else {
-            res.status(200).json({
-                status: "success",
-                message: "User deleted"
-            })
-        }
-    })
+exports.deleteUserById = async(req, res) => {
+    const foundUser = await User.findById(req.params.id);
+    console.log(foundUser)
+    if (foundUser) {
+        User.findByIdAndDelete(req.params.id, function() {});
+
+        res.status(200).json({
+            status: "success",
+            message: "User Deleted"
+        })
+    } else {
+        res.status(404).json({
+            status: "Not Found"
+        });
+    }
 }
