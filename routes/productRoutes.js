@@ -8,10 +8,11 @@ productRouter
     .all(authController.protect)
     .get(productController.getAllProducts)
     .post(productController.addProduct)
+    .put(productController.updateProduct);
 productRouter
     .route("/:id")
     .all(authController.protect)
     .get(productController.getProductById)
-
+    .delete(productController.deleteProductById);
 
 module.exports = productRouter;

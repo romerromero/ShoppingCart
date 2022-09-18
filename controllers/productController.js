@@ -40,3 +40,37 @@ exports.getProductById = catchAsync(async(req, res) => {
         });
     }
 });
+
+
+exports.updateProduct = (req, res) => {
+    //Find Product and Update
+    Product.findByIdAndUpdate(req.body._id, req.body, { new: true },
+        function(err, response) {
+            if (err) {
+                res.status(404).json({
+                    status: "Not found"
+                })
+            } else {
+                res.status(200).json({
+                    status: "success",
+                    message: "Product Updated"
+                })
+            }
+        });
+};
+
+exports.deleteProductById = (req, res) => {
+    //Find Product and Delete
+    Product.findByIdAndDelete(req.params.id, function(err, document) {
+        if (err) {
+            res.status(404).json({
+                status: "Not Found"
+            });
+        } else {
+            res.status(200).json({
+                status: "success",
+                message: "Product deleted"
+            })
+        }
+    })
+}
